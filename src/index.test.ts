@@ -1,4 +1,4 @@
-import { Schema } from 'index';
+import { Schema } from './index';
 
 // https://github.com/Microsoft/TypeScript/issues/27024#issuecomment-421529650
 type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
@@ -48,7 +48,7 @@ const typedTupleSchema = {
 Type<Equal<Schema<typeof typedTupleSchema>, [number, string, 'Street' | 'Avenue' | 'Boulevard']>>();
 
 const untypedSchema = { type: 'array' } as const;
-Type<Equal<Schema<typeof untypedSchema>, string[]>>();
+Type<Equal<Schema<typeof untypedSchema>, any[]>>();
 
 // type ZZ<T> = {[k in keyof T]: Schema<T[k]> };
 // type ZZZ = SimpleTupleSchema<[{"type": "number"},{"type": "string"}]>

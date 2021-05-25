@@ -5,10 +5,11 @@
   "main": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "build": "tsc",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
     "lint": "eslint \"src/**/*.ts\"",
     "watch": "tsc --watch",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "tsc --noEmit"
   },
   "author": "",
   "license": "ISC",
