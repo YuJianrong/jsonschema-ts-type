@@ -1,15 +1,13 @@
 {
-  "name": "schemats",
-  "version": "1.0.0",
+  "name": "jsonschema-ts-type",
+  "version": "0.0.1",
   "description": "",
-  "main": "./dist/index.js",
+  "types": "src/index.ts",
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "test": "tsc",
     "lint": "eslint \"src/**/*.ts\"",
     "watch": "tsc --watch",
-    "prepare": "husky install",
-    "test": "tsc --noEmit"
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",

@@ -1,47 +1,57 @@
-import { Schema } from './index';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { Schema } from '.';
 
 // https://github.com/Microsoft/TypeScript/issues/27024#issuecomment-421529650
 type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
   ? true
   : false;
 
-function Type<T extends true>(): T | undefined {
+function Expect<T extends true>(): T | void {}
+
+function ExpectNot<T extends false>(): T | void {
   return;
 }
 
-Type<Equal<undefined, undefined>>();
+Expect<Equal<false, false>>();
+ExpectNot<Equal<false, true>>();
+
+Expect<Equal<any, any>>();
+ExpectNot<Equal<undefined, any>>();
+ExpectNot<Equal<null, any>>();
+ExpectNot<Equal<string, any>>();
+ExpectNot<Equal<undefined, null>>();
 
 const stringSchema = { type: 'string', minLength: 2 } as const;
-Type<Equal<Schema<typeof stringSchema>, string>>();
+Expect<Equal<Schema<typeof stringSchema>, string>>();
 
 const numberSchema = { type: 'number', minimum: 0 } as const;
-Type<Equal<Schema<typeof numberSchema>, number>>();
+Expect<Equal<Schema<typeof numberSchema>, number>>();
 const integerSchema = { type: 'integer', minimum: 0 } as const;
-Type<Equal<Schema<typeof integerSchema>, number>>();
+Expect<Equal<Schema<typeof integerSchema>, number>>();
 
 const booleanSchema = { type: 'boolean' } as const;
-Type<Equal<Schema<typeof booleanSchema>, boolean>>();
+Expect<Equal<Schema<typeof booleanSchema>, boolean>>();
 
 const nullSchema = { type: 'null' } as const;
-Type<Equal<Schema<typeof nullSchema>, null>>();
+Expect<Equal<Schema<typeof nullSchema>, null>>();
 
 const enumSchema = { enum: ['null', 1, null, 'hello'] } as const;
-Type<Equal<Schema<typeof enumSchema>, null | 'null' | 1 | 'hello'>>();
+Expect<Equal<Schema<typeof enumSchema>, null | 'null' | 1 | 'hello'>>();
 
 const stringEnumSchema = { type: 'string', enum: ['null', 'hello'] } as const;
-Type<Equal<Schema<typeof stringEnumSchema>, 'null' | 'hello'>>();
+Expect<Equal<Schema<typeof stringEnumSchema>, 'null' | 'hello'>>();
 
 const numberEnumSchema = { type: 'number', enum: [1, 2, 3] } as const;
-Type<Equal<Schema<typeof numberEnumSchema>, 1 | 2 | 3>>();
+Expect<Equal<Schema<typeof numberEnumSchema>, 1 | 2 | 3>>();
 
 const simpleUnionSchema = { type: ['boolean', 'string'] } as const;
-Type<Equal<Schema<typeof simpleUnionSchema>, string | boolean>>();
+Expect<Equal<Schema<typeof simpleUnionSchema>, string | boolean>>();
 
 const typedStringArraySchema = { type: 'array', items: { type: 'string' } } as const;
-Type<Equal<Schema<typeof typedStringArraySchema>, string[]>>();
+Expect<Equal<Schema<typeof typedStringArraySchema>, string[]>>();
 
 const typedUnionArraySchema = { type: 'array', items: { type: ['string', 'boolean'] } } as const;
-Type<Equal<Schema<typeof typedUnionArraySchema>, (string | boolean)[]>>();
+Expect<Equal<Schema<typeof typedUnionArraySchema>, (string | boolean)[]>>();
 
 const typedTupleSchema = {
   type: 'array',
@@ -51,7 +61,7 @@ const typedTupleSchema = {
     { type: 'string', enum: ['Street', 'Avenue', 'Boulevard'] },
   ],
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof typedTupleSchema>,
     | []
@@ -71,7 +81,7 @@ const typedMinItemsTupleSchema = {
   ],
   minItems: 2,
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof typedMinItemsTupleSchema>,
     | [number, string]
@@ -89,7 +99,7 @@ const typedNoAdditionalItemsTupleSchema = {
   ],
   additionalItems: false,
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof typedNoAdditionalItemsTupleSchema>,
     [] | [number] | [number, string] | [number, string, 'Street' | 'Avenue' | 'Boulevard']
@@ -106,7 +116,7 @@ const typedNoAdditionalMinItemsTupleSchema = {
   additionalItems: false,
   minItems: 2,
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof typedNoAdditionalMinItemsTupleSchema>,
     [number, string] | [number, string, 'Street' | 'Avenue' | 'Boulevard']
@@ -122,7 +132,7 @@ const typedAdditionalStringTupleSchema = {
   ],
   additionalItems: { type: 'string' },
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof typedAdditionalStringTupleSchema>,
     | []
@@ -143,7 +153,7 @@ const typedAdditionalStringMinItemsTupleSchema = {
   minItems: 2,
   additionalItems: { enum: ['Good', null] },
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof typedAdditionalStringMinItemsTupleSchema>,
     | [number, string]
@@ -153,7 +163,7 @@ Type<
 >();
 
 const untypedArraySchema = { type: 'array' } as const;
-Type<Equal<Schema<typeof untypedArraySchema>, any[]>>();
+Expect<Equal<Schema<typeof untypedArraySchema>, any[]>>();
 
 const objectSchema = {
   type: 'object',
@@ -163,7 +173,7 @@ const objectSchema = {
     street_type: { enum: ['Street', 'Avenue', 'Boulevard'] },
   },
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof objectSchema>,
     {
@@ -183,7 +193,7 @@ const objectNoAdditionalPropertiesSchema = {
   },
   additionalProperties: false,
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof objectNoAdditionalPropertiesSchema>,
     {
@@ -203,7 +213,7 @@ const objectSpecificAdditionalPropertiesSchema = {
   },
   additionalProperties: { type: 'string' },
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof objectSpecificAdditionalPropertiesSchema>,
     {
@@ -224,7 +234,7 @@ const objectPartialRequiredSchema = {
   additionalProperties: false,
   required: ['number', 'street_name'],
 } as const;
-Type<
+Expect<
   Equal<
     Schema<typeof objectPartialRequiredSchema>,
     {
@@ -238,12 +248,12 @@ Type<
 const constStringSchema = {
   const: 'Hello',
 } as const;
-Type<Equal<Schema<typeof constStringSchema>, 'Hello'>>();
+Expect<Equal<Schema<typeof constStringSchema>, 'Hello'>>();
 
 const constNumberSchema = {
   const: 1.23,
 } as const;
-Type<Equal<Schema<typeof constNumberSchema>, 1.23>>();
+Expect<Equal<Schema<typeof constNumberSchema>, 1.23>>();
 
 // type Z = Schema<{
 //   description: 'Any validation failures are shown in the right-hand Messages pane.';
