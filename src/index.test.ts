@@ -8,9 +8,7 @@ type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ?
 
 function Expect<T extends true>(): T | void {}
 
-function ExpectNot<T extends false>(): T | void {
-  return;
-}
+function ExpectNot<T extends false>(): T | void {}
 
 Expect<Equal<false, false>>();
 ExpectNot<Equal<false, true>>();
