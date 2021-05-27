@@ -1,23 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Schema } from '.';
-
-// https://github.com/Microsoft/TypeScript/issues/27024#issuecomment-421529650
-type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
-  ? true
-  : false;
-
-function Expect<T extends true>(): T | void {}
-
-function ExpectNot<T extends false>(): T | void {}
-
-Expect<Equal<false, false>>();
-ExpectNot<Equal<false, true>>();
-
-Expect<Equal<any, any>>();
-ExpectNot<Equal<undefined, any>>();
-ExpectNot<Equal<null, any>>();
-ExpectNot<Equal<string, any>>();
-ExpectNot<Equal<undefined, null>>();
+import { Schema } from '../src';
+import { Equal, Expect } from './testHelper';
 
 const stringSchema = { type: 'string', minLength: 2 } as const;
 Expect<Equal<Schema<typeof stringSchema>, string>>();

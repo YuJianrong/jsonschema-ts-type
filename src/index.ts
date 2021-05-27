@@ -1,11 +1,8 @@
+import { BasicSchema } from './basic';
+
 type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
 
 // Primitive
-type StringSchema<T> = T extends { type: 'string' } ? string : never;
-type NumberSchema<T> = T extends { type: 'number' } ? number : never;
-type IntegerSchema<T> = T extends { type: 'integer' } ? number : never;
-type BooleanSchema<T> = T extends { type: 'boolean' } ? boolean : never;
-type NullSchema<T> = T extends { type: 'null' } ? null : never;
 
 // Enum
 type EnumSchema<T> = T extends { enum: any[] } ? T['enum'][number] : never;
@@ -96,39 +93,16 @@ type ObjectSchema<T> = T extends {
   ? PlainObjectSchema<T> & Record<string, any>
   : never;
 
-// Simple Union (type: ['string', 'number'])
-type SimpleString<T> = T extends 'string' ? string : never;
-type SimpleNumber<T> = T extends 'number' ? number : never;
-type SimpleInteger<T> = T extends 'integer' ? number : never;
-type SimpleBoolean<T> = T extends 'boolean' ? boolean : never;
-type SimpleNull<T> = T extends 'null' ? null : never;
-type Simple<T> =
-  | SimpleString<T>
-  | SimpleNumber<T>
-  | SimpleInteger<T>
-  | SimpleBoolean<T>
-  | SimpleNull<T>;
-type SimpleUnionSchema<T> = T extends { type: ('string' | 'number' | 'boolean')[] }
-  ? Simple<T['type'][number]>
-  : never;
-
 // Const
 type ConstSchema<T> = T extends { const: infer C } ? C : never;
 
-// Put together
-type NonEnumSchema<T> =
-  | StringSchema<T>
-  | NumberSchema<T>
-  | IntegerSchema<T>
-  | BooleanSchema<T>
-  | NullSchema<T>
-  | SimpleUnionSchema<T>
-  | TupleOrArraySchema<T>
-  | ObjectSchema<T>;
-
 type WritableSchema<T> = EnumSchema<T> extends never
   ? ConstSchema<T> extends never
-    ? NonEnumSchema<T>
+    ? TupleOrArraySchema<T> extends never
+      ? ObjectSchema<T> extends never
+        ? BasicSchema<T>
+        : ObjectSchema<T>
+      : TupleOrArraySchema<T>
     : ConstSchema<T>
   : EnumSchema<T>;
 
