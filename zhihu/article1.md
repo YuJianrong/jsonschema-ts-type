@@ -1,3 +1,5 @@
+#! https://zhuanlan.zhihu.com/p/375740178
+
 # TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（1）
 
 最近看到一篇知乎文章（或者是回答？）提到在 TypeScript 中直接用 JSONSchema 来定义类型，然后通过 TypeScript 的泛型来把 Schema 转化成 TypeScript 类型，这样来实现在编译期（通过 TypeScript）和运行时（通过 JSONSchema Validator)同时验证类型，非常有意思（抱歉我找了好久也没找到是哪篇文章了，知道这篇文章的朋友请告知一下）。不过在那篇文章中只实现了比较基础的一些类型转换，我就在想能不能做得更多一些，这个文章就是系列尝试的第一篇。

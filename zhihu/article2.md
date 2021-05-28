@@ -1,3 +1,5 @@
+#! https://zhuanlan.zhihu.com/p/375918832
+
 # TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（2）
 
 这是系列文章的第二篇，还不知道上下文的读者请从第一篇开始阅读。
@@ -37,7 +39,7 @@ const typed2DStringArraySchema = {
 } as const;
 Expect<Equal<Schema<typeof typed2DStringArraySchema>, number[][]>>();
 
-// 以及类和类型
+// 以及联合类型
 const typedUnionArraySchema = { type: 'array', items: { type: ['string', 'boolean'] } } as const;
 Expect<Equal<Schema<typeof typedUnionArraySchema>, (string | boolean)[]>>();
 ```
@@ -141,7 +143,8 @@ Expect<Equal<Schema<typeof typedTupleSchema>, [number, string, boolean]>>();
 提取 items 的类型那已经驾轻就熟了：
 
 ```TypeScript
-export type TupleSchema<T> = T extends { type: 'array'; items: any[] } ? T['items'] : never;
+export type TupleSchema<T> = T extends { type: 'array'; items: any[] }
+  ? T['items'] : never;
 ```
 
 _注意：这里需要用 `items: any[]`，这样不是数组的 `items` 类型还可以继续交给 `TypedArraySchema<>` 去处理。_
@@ -174,8 +177,10 @@ Expect<
 当然有了 TypeScript 4.0 的可变元组类型的泛型，这怎么能难倒我们呢?
 
 ```TypeScript
-type AllTuples<T> = T extends [...infer Heads, infer _Tail] ? AllTuples<Heads> | T : [];
+type AllTuples<T> =
+  T extends [...infer Heads, infer _Tail] ? AllTuples<Heads> | T : [];
 // type Z = AllTuples<[1, 2, 3]>; 将会生成类型 [] | [1] | [1, 2] | [1, 2, 3]
+
 // TupleSchema 就变成
 type TupleSchema<T> = T extends { type: 'array'; items: any[] }
   ? AllTuples<MapTuple<T['items']>>
@@ -251,9 +256,9 @@ Test cases 又恢复正常了。
 
 这样就结束了吗？结束了吗？？当然不是……
 
-JSONSchema 的元组还有另一个定义：额外元素类型 `additionalItems`。关于这个元素可以有三种可能：
+JSONSchema 的元组还有另一个定义：额外元素类型 `additionalItems`。这个元素有三种可能：
 
-1. 未定义，在元组之外可以有任意多个**any**类型成员
+1. 未定义，在元组之外可以有任意多个 **any** 类型成员
 2. 定义为 `false`， 则在元组之外没有任何成员
 3. 定义为另一个 JSONSchema，在元组之外可以有任意多个该 JSONSchema 定义的类型成员
 
@@ -374,7 +379,8 @@ type AnyTypedAdditionalItemsTupleSchema<T> = T extends {
   ? BasicTupleSchema<T> | [...MapTuple<T['items']>, ...any[]]
   : never;
 
-// TupleSchema 也还是需要短路的，毕竟三种类型都有冲突，注意 AnyTypedAdditionalItemsTupleSchema 必须放最后
+// TupleSchema 也还是需要短路的，毕竟三种类型都有冲突，注意
+// AnyTypedAdditionalItemsTupleSchema 必须放最后
 export type TupleSchema<T> = ShortCircuited<
   [
     NoAdditionalItemsTupleSchema<T>,
