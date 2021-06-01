@@ -121,7 +121,7 @@ type RequiredObjectSchema<T> = T extends {
 export type ObjectSchema<T> = ShortCircuited<[RequiredObjectSchema<T>, OptionalObjectSchema<T>]>;
 ```
 
-然而 test case 报错了……原来我们的泛型 `Equal<>` 认为类型 `{a: number;} & {b: string;}` 和 `{a: number; b: string;}` 是不同的。既然组合类型看起来确实不好看，我们还是应该把它们合并，合并组合类型的简单方法就是再来一个泛型：
+然而 test case 报错了……原来我们的泛型 `Equal<>` 认为类型 `{a: number;} & {b: string;}` 和 `{a: number; b: string;}` 是不同的。既然交叉类型看起来确实不好看，我们还是应该把它们合并，合并交叉类型的简单方法就是再来一个泛型：
 
 ```TypeScript
 type MergeIntersection<T> = { [K in keyof T]: T[K] };
@@ -358,7 +358,7 @@ export type ObjectSchema<T> = ShortCircuited<
 
 JSONSchema 在 Object 上还支持很多其他属性，比如可定义属性名字的正则 `propertyNames`，比如可定义最少/最多多少个属性 `minProperties`/`maxProperties` 等等，这些在 TypeScript 类型上无法支持，就只能留给 JSON Validator 了。
 
-本文总结：组合类型很有用，而把组合类型展开的类型更易读。
+本文总结：交叉类型很有用，而把交叉类型展开的类型更易读。
 
 ## 下一篇
 
