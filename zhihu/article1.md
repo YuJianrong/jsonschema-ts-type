@@ -1,6 +1,6 @@
 #! https://zhuanlan.zhihu.com/p/375740178
 
-# TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（1）
+# TypeScript 泛型解析 JSONSchema（1）
 
 最近看到一篇知乎文章（或者是回答？）提到在 TypeScript 中直接用 JSONSchema 来定义类型，然后通过 TypeScript 的泛型来把 Schema 转化成 TypeScript 类型，这样来实现在编译期（通过 TypeScript）和运行时（通过 JSONSchema Validator)同时验证类型，非常有意思（抱歉我找了好久也没找到是哪篇文章了，知道这篇文章的朋友请告知一下）。不过在那篇文章中只实现了比较基础的一些类型转换，我就在想能不能做得更多一些，这个文章就是系列尝试的第一篇。
 
@@ -356,3 +356,11 @@ export type Schema<T> = BasicSchema<DeepWriteable<T>>;
 在这篇文章中我们成功把 JSONSchema 的基本类型转换成 TypeScript 类型了，下一篇文章让我们来尝试数组吧！
 
 注：本文代码已上传至[GitHub 仓库](https://github.com/YuJianrong/jsonschema-ts-type)，欢迎 Fork 和提 PR，大家一起来做类型体操吧！
+
+### 系列文章索引
+
+- [TypeScript 泛型解析 JSONSchema（1）](https://zhuanlan.zhihu.com/p/375740178)
+- [TypeScript 泛型解析 JSONSchema（2）](https://zhuanlan.zhihu.com/p/375918832)
+- [TypeScript 泛型解析 JSONSchema（3）](https://zhuanlan.zhihu.com/p/376388589)
+- [TypeScript 泛型解析 JSONSchema（4）](https://zhuanlan.zhihu.com/p/376943084)
+- [TypeScript 泛型解析 JSONSchema（5）](https://zhuanlan.zhihu.com/p/376943197)

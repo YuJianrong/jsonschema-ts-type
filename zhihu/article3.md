@@ -1,6 +1,6 @@
 #! https://zhuanlan.zhihu.com/p/376388589
 
-# TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（3）
+# TypeScript 泛型解析 JSONSchema（3）
 
 系列文章进入第三篇，这一篇我们会开始尝试转化（可能是最重要的）JSONSchema 特性：对象。还没阅读过之前文章的读者请从第一篇开始阅读。
 
@@ -365,3 +365,11 @@ JSONSchema 在 Object 上还支持很多其他属性，比如可定义属性名�
 下一篇文章我们将尝试转化 JSONSchema 一些常用的关键字和组合方式。
 
 注：本文代码已上传至[GitHub 仓库](https://github.com/YuJianrong/jsonschema-ts-type)，欢迎 Fork 和提 PR，大家一起来做类型体操吧！
+
+### 系列文章索引
+
+- [TypeScript 泛型解析 JSONSchema（1）](https://zhuanlan.zhihu.com/p/375740178)
+- [TypeScript 泛型解析 JSONSchema（2）](https://zhuanlan.zhihu.com/p/375918832)
+- [TypeScript 泛型解析 JSONSchema（3）](https://zhuanlan.zhihu.com/p/376388589)
+- [TypeScript 泛型解析 JSONSchema（4）](https://zhuanlan.zhihu.com/p/376943084)
+- [TypeScript 泛型解析 JSONSchema（5）](https://zhuanlan.zhihu.com/p/376943197)

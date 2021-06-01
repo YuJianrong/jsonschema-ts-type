@@ -1,4 +1,6 @@
-# TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（5）
+#! https://zhuanlan.zhihu.com/p/376943197
+
+# TypeScript 泛型解析 JSONSchema（5）
 
 系列文章进入第五篇，前面几篇我们处理了 JSONSchema 常见的各种特性，这一篇我们来尝试一下棘手的 `$ref`。
 
@@ -7,7 +9,7 @@
 首先介绍一下 `$ref`，`$ref` 是用于引用定义在另一个地方的 JSONSchema，比如 `"#/definitions/address"` 意思就是“使用 `/definitions/address` 这个位置的 JSONSchema 来表示该类型。那么为什么 `$ref` 棘手呢？原因在于：
 
 1. `$ref` 是字符串
-2. `$ref` 的指向是绝对路径，我们用了很对递归，在递归解析到内部 JSONSchema 的时候，已经定位不到全局 JSONSchema 了
+2. `$ref` 的指向是绝对路径，我们用了很多递归，在递归解析到内部 JSONSchema 的时候，已经定位不到全局 JSONSchema 了
 
 ## 模板字符串
 
@@ -79,7 +81,7 @@ Expect<
 >();
 ```
 
-首先，还是和之前一样，首先要提取 `$ref`，介于 `$ref` 总是开始于 `#/`，我们也顺便把这个 `#/` 去掉，方便之后的操作。这只要通过 `infer` 和模板字符串类型就可以轻松做到:
+首先，还是和之前一样来提取 `$ref`，介于 `$ref` 总是开始于 `#/`，我们也顺便把这个 `#/` 去掉，方便之后的操作。这只要通过 `infer` 和模板字符串类型就可以轻松做到:
 
 ```TypeScript
 export type RefSchema<T, S> = T extends {
@@ -89,7 +91,7 @@ export type RefSchema<T, S> = T extends {
   : never;
 ```
 
-注意这里引入了第二个模板参数 `S`，这个参数 `S` 就是用来一直保存全局 JSONSchema。注意 `T` 只适用于取得 `Path`，我们不需要 `T` 来寻找类型，只需要全局 JSONSchema `S` 就够了。
+注意这里引入了第二个模板参数 `S`，这个参数 `S` 就是用来一直保存全局 JSONSchema。 `T` 只用于取得 `Path`，我们并不需要 `T` 来寻找 Schema，只需要全局 JSONSchema `S` 就够了。
 
 然后就是怎么写 `Definitions` 这个模板了，注意到拿掉 `#/` 的 `$ref` 是这样的结构：
 
@@ -118,7 +120,7 @@ type Definitions<T extends Record<string, any>, Path extends string, S> =
     : WritableSchema<T[Path], S>;
 ```
 
-这里可以看到为什么我们这里既需要 `T`、又需要 `S`， `T` 是当前递归提取的定义，而 `S` 是全局 JSONSchema，如果 `$ref` 出现嵌套，就也需要另一个全局 JSONSchema 来继续寻找下一个 `$ref` 所对应的 Schema。
+这里可以看到为什么我们既需要 `T`、又需要 `S`， `T` 是当前递归提取的定义，而 `S` 是全局 JSONSchema，如果 `$ref` 出现嵌套，就也需要另一个全局 JSONSchema 来继续寻找下一个 `$ref` 所对应的 Schema。
 
 从这里出发，以前的 `WritableSchema` 要改写成这样：
 
@@ -155,7 +157,7 @@ test case 全部通过！大功告成！
 
 最后看看 VSCode 的结果：
 
-![Ref](https://pic4.zhimg.com/80/v2-49140be9964a92d7af9c3974222068be.png)
+![JSONSchema $Ref](https://pic4.zhimg.com/80/v2-49140be9964a92d7af9c3974222068be.png)
 
 ## 小结
 
@@ -164,3 +166,11 @@ test case 全部通过！大功告成！
 谢谢阅读！
 
 注：本文代码已上传至[GitHub 仓库](https://github.com/YuJianrong/jsonschema-ts-type)，欢迎 Fork 和提 PR，大家一起来做类型体操吧！
+
+### 系列文章索引
+
+- [TypeScript 泛型解析 JSONSchema（1）](https://zhuanlan.zhihu.com/p/375740178)
+- [TypeScript 泛型解析 JSONSchema（2）](https://zhuanlan.zhihu.com/p/375918832)
+- [TypeScript 泛型解析 JSONSchema（3）](https://zhuanlan.zhihu.com/p/376388589)
+- [TypeScript 泛型解析 JSONSchema（4）](https://zhuanlan.zhihu.com/p/376943084)
+- [TypeScript 泛型解析 JSONSchema（5）](https://zhuanlan.zhihu.com/p/376943197)

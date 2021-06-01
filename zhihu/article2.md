@@ -1,6 +1,6 @@
 #! https://zhuanlan.zhihu.com/p/375918832
 
-# TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（2）
+# TypeScript 泛型解析 JSONSchema（2）
 
 这是系列文章的第二篇，还不知道上下文的读者请从第一篇开始阅读。
 
@@ -399,3 +399,11 @@ type TupleSchema<T> = ShortCircuited<
 下一篇文章让我们来尝试一下 JSONSchema 最有用的对象类型吧！
 
 注：本文代码已上传至[GitHub 仓库](https://github.com/YuJianrong/jsonschema-ts-type)，欢迎 Fork 和提 PR，大家一起来做类型体操吧！
+
+### 系列文章索引
+
+- [TypeScript 泛型解析 JSONSchema（1）](https://zhuanlan.zhihu.com/p/375740178)
+- [TypeScript 泛型解析 JSONSchema（2）](https://zhuanlan.zhihu.com/p/375918832)
+- [TypeScript 泛型解析 JSONSchema（3）](https://zhuanlan.zhihu.com/p/376388589)
+- [TypeScript 泛型解析 JSONSchema（4）](https://zhuanlan.zhihu.com/p/376943084)
+- [TypeScript 泛型解析 JSONSchema（5）](https://zhuanlan.zhihu.com/p/376943197)

@@ -1,4 +1,6 @@
-# TypeScript 泛型实验：TypeScript 泛型解析 JSONSchema（4）
+#! https://zhuanlan.zhihu.com/p/376943084
+
+# TypeScript 泛型解析 JSONSchema（4）
 
 系列文章进入第四篇，前面几篇我们处理了 JSONSchema 支持的各种基本类型，从这篇开始将会是一些和基本类型不同的 JSONSchema 特性。
 
@@ -18,7 +20,7 @@ const constNumberSchema = {
 } as const;
 Expect<Equal<Schema<typeof constNumberSchema>, 1.23>>();
 
-// 再拉个对象类型
+// 再来个对象类型
 const constInObjectSchema = {
   type: 'object',
   properties: {
@@ -162,17 +164,17 @@ type MapTuple<T extends any[]> = T extends [...infer Heads, infer Tail]
   : [];
 ```
 
-`AnyOf` 和和元组的唯一区别就是把元组都合并成一个联合类型吧！那就很简单了：
+`AnyOf` 和元组的唯一区别就是把元组都合并成一个联合类型吧！那就很简单了：
 
 ```TypeScript
-type MapAnyOfTuple<T extends any[]> = T extends [...infer Heads, infer Tail]
-  ? MapAnyOfTuple<Heads> | WritableSchema<Tail>
+type MapAnyOf<T extends any[]> = T extends [...infer Heads, infer Tail]
+  ? MapAnyOf<Heads> | WritableSchema<Tail>
   : never;
 
 type AnyOfSchema<T> = T extends {
   anyOf: any[];
 }
-  ? MapAnyOfTuple<T['anyOf']>
+  ? MapAnyOf<T['anyOf']>
   : never;
 
 // 加进断路器里，注意要加在 const 和 enum 之后，显然 anyOf 优先级应该更低
@@ -190,7 +192,7 @@ test case 全部通过啦！
 
 ## 无法转化的特性
 
-注意 JSONSchema 在组合关键词上还有一个特性：共有的属性可以提取到关键词之外，就像下面这样：
+注意 JSONSchema 在组合关键词上还有一个特性：共有的属性可以提取到关键词之外，就像下面这两个 Schema 是一样的：
 
 ```JSON
 {
@@ -219,6 +221,14 @@ test case 全部通过啦！
 
 ## 下一篇
 
-我们基本已经把常见的 JSONSchema 特性过了一遍了，还剩下什么呢？那就是 JSONSchema 神奇（头大）的引用（`$ref`）啦！这个究竟能不能做呢？我们将在下一篇来进行尝试。
+我们基本已经把常见的 JSONSchema 特性过了一遍了，还剩下什么呢？那就是 JSONSchema 神(tou)奇(da)的引用（`$ref`）啦！这个究竟能不能做呢？我们将在下一篇来进行尝试。
 
 注：本文代码已上传至[GitHub 仓库](https://github.com/YuJianrong/jsonschema-ts-type)，欢迎 Fork 和提 PR，大家一起来做类型体操吧！
+
+### 系列文章索引
+
+- [TypeScript 泛型解析 JSONSchema（1）](https://zhuanlan.zhihu.com/p/375740178)
+- [TypeScript 泛型解析 JSONSchema（2）](https://zhuanlan.zhihu.com/p/375918832)
+- [TypeScript 泛型解析 JSONSchema（3）](https://zhuanlan.zhihu.com/p/376388589)
+- [TypeScript 泛型解析 JSONSchema（4）](https://zhuanlan.zhihu.com/p/376943084)
+- [TypeScript 泛型解析 JSONSchema（5）](https://zhuanlan.zhihu.com/p/376943197)
