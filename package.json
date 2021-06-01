@@ -1,6 +1,6 @@
 {
   "name": "jsonschema-ts-type",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "types": "src/index.ts",
   "scripts": {
