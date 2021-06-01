@@ -1,7 +1,7 @@
 {
   "name": "jsonschema-ts-type",
   "version": "1.0.0",
-  "description": "",
+  "description": "TypeScript Type Helper to convert JSONSchema to TypeScript Type",
   "types": "src/index.ts",
   "scripts": {
     "test": "tsc",
@@ -9,8 +9,12 @@
     "watch": "tsc --watch",
     "prepare": "husky install"
   },
-  "author": "",
-  "license": "ISC",
+  "homepage": "https://github.com/YuJianrong/jsonschema-ts-type",
+  "bugs": {
+    "url": "https://github.com/YuJianrong/jsonschema-ts-type/issues"
+  },
+  "author": "Jianrong Yu <yujianrong@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^15.6.1",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
