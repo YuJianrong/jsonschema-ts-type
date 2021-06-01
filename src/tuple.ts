@@ -6,47 +6,49 @@ type AllTuples<T extends { length: number }, Min> = T['length'] extends Min
   : T extends [...infer Heads, infer _Tail]
   ? AllTuples<Heads, Min> | T
   : [];
-type MapTuple<T extends any[]> = T extends [...infer Heads, infer Tail]
-  ? [...MapTuple<Heads>, WritableSchema<Tail>]
+type MapTuple<T extends any[], S> = T extends [...infer Heads, infer Tail]
+  ? [...MapTuple<Heads, S>, WritableSchema<Tail, S>]
   : [];
 
-type SimpleTupleSchema<T> = T extends { type: 'array'; items: any[] }
-  ? AllTuples<MapTuple<T['items']>, 0>
+type SimpleTupleSchema<T, S> = T extends { type: 'array'; items: any[] }
+  ? AllTuples<MapTuple<T['items'], S>, 0>
   : never;
 
-type MinItemsTupleSchema<T> = T extends { type: 'array'; items: any[]; minItems: number }
-  ? AllTuples<MapTuple<T['items']>, T['minItems']>
+type MinItemsTupleSchema<T, S> = T extends { type: 'array'; items: any[]; minItems: number }
+  ? AllTuples<MapTuple<T['items'], S>, T['minItems']>
   : never;
 
-type BasicTupleSchema<T> = ShortCircuited<[MinItemsTupleSchema<T>, SimpleTupleSchema<T>]>;
+type BasicTupleSchema<T, S> = ShortCircuited<[MinItemsTupleSchema<T, S>, SimpleTupleSchema<T, S>]>;
 
-type NoAdditionalItemsTupleSchema<T> = T extends {
+type NoAdditionalItemsTupleSchema<T, S> = T extends {
   type: 'array';
   items: any[];
   additionalItems: false;
 }
-  ? BasicTupleSchema<T>
+  ? BasicTupleSchema<T, S>
   : never;
 
-type TypedAdditionalItemsTupleSchema<T> = T extends {
+type TypedAdditionalItemsTupleSchema<T, S> = T extends {
   type: 'array';
   items: any[];
   additionalItems: any;
 }
-  ? BasicTupleSchema<T> | [...MapTuple<T['items']>, ...WritableSchema<T['additionalItems']>[]]
+  ?
+      | BasicTupleSchema<T, S>
+      | [...MapTuple<T['items'], S>, ...WritableSchema<T['additionalItems'], S>[]]
   : never;
 
-type AnyTypedAdditionalItemsTupleSchema<T> = T extends {
+type AnyTypedAdditionalItemsTupleSchema<T, S> = T extends {
   type: 'array';
   items: any[];
 }
-  ? BasicTupleSchema<T> | [...MapTuple<T['items']>, ...any[]]
+  ? BasicTupleSchema<T, S> | [...MapTuple<T['items'], S>, ...any[]]
   : never;
 
-export type TupleSchema<T> = ShortCircuited<
+export type TupleSchema<T, S> = ShortCircuited<
   [
-    NoAdditionalItemsTupleSchema<T>,
-    TypedAdditionalItemsTupleSchema<T>,
-    AnyTypedAdditionalItemsTupleSchema<T>,
+    NoAdditionalItemsTupleSchema<T, S>,
+    TypedAdditionalItemsTupleSchema<T, S>,
+    AnyTypedAdditionalItemsTupleSchema<T, S>,
   ]
 >;

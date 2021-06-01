@@ -49,7 +49,7 @@ Expect<
 
 ```TypeScript
 
-export type ObjectSchema<T> = T extends {
+type ObjectSchema<T> = T extends {
   type: 'object';
   properties: infer P;
 }
@@ -57,7 +57,7 @@ export type ObjectSchema<T> = T extends {
   : never;
 
 // 再和之前的短路类型连接起来
-export type WritableSchema<T> = ShortCircuited<
+type WritableSchema<T> = ShortCircuited<
   [ObjectSchema<T>, TupleSchema<T>, TypedArraySchema<T>, BasicSchema<T>]
 >;
 ```
@@ -118,7 +118,7 @@ type RequiredObjectSchema<T> = T extends {
   : never;
 
 // 原来的 ObjectSchema 改名为 OptionalObjectSchema 并用短路泛型连起来
-export type ObjectSchema<T> = ShortCircuited<[RequiredObjectSchema<T>, OptionalObjectSchema<T>]>;
+type ObjectSchema<T> = ShortCircuited<[RequiredObjectSchema<T>, OptionalObjectSchema<T>]>;
 ```
 
 然而 test case 报错了……原来我们的泛型 `Equal<>` 认为类型 `{a: number;} & {b: string;}` 和 `{a: number; b: string;}` 是不同的。既然交叉类型看起来确实不好看，我们还是应该把它们合并，合并交叉类型的简单方法就是再来一个泛型：
@@ -347,7 +347,7 @@ type NoAdditionalPropertiesObjectSchema<T> = T extends {
 
 type AdditionalPropertiesObjectSchema<T> = PropertiesOnlyObjectSchema<T, true>;
 
-export type ObjectSchema<T> = ShortCircuited<
+type ObjectSchema<T> = ShortCircuited<
   [NoAdditionalPropertiesObjectSchema<T>, AdditionalPropertiesObjectSchema<T>]
 >;
 ```

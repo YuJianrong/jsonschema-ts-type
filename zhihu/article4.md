@@ -34,10 +34,10 @@ Expect<Equal<Schema<typeof constInObjectSchema>, { country?: 'China' }>>();
 已经提取过那么多参数了，这个完全没压力啊：
 
 ```TypeScript
-export type ConstSchema<T> = T extends { const: any } ? T['const'] : never;
+type ConstSchema<T> = T extends { const: any } ? T['const'] : never;
 
 // 当然注意这个要放断路器第一个，遇到 const 就不用做其他转化了
-export type WritableSchema<T> = ShortCircuited<
+type WritableSchema<T> = ShortCircuited<
   [ConstSchema<T>, ObjectSchema<T>, TupleSchema<T>, TypedArraySchema<T>, BasicSchema<T>]
 >;
 ```
@@ -73,10 +73,10 @@ Expect<Equal<Schema<typeof enumInObjSchema>, { superPower?: 'China' | 'US' }>>()
 和 `const` 类似，怎么写枚举前面几篇文章基本上都已经提到，这里就简单跳过解释了：
 
 ```TypeScript
-export type EnumSchema<T> = T extends { enum: any[] } ? T['enum'][number] : never;
+type EnumSchema<T> = T extends { enum: any[] } ? T['enum'][number] : never;
 
 // 枚举应该在常数之后，如果两个都出现显然只需要考虑常数类型
-export type WritableSchema<T> = ShortCircuited<
+type WritableSchema<T> = ShortCircuited<
   [
     ConstSchema<T>,
     EnumSchema<T>,
@@ -169,14 +169,14 @@ type MapAnyOfTuple<T extends any[]> = T extends [...infer Heads, infer Tail]
   ? MapAnyOfTuple<Heads> | WritableSchema<Tail>
   : never;
 
-export type AnyOfSchema<T> = T extends {
+type AnyOfSchema<T> = T extends {
   anyOf: any[];
 }
   ? MapAnyOfTuple<T['anyOf']>
   : never;
 
 // 加进断路器里，注意要加在 const 和 enum 之后，显然 anyOf 优先级应该更低
-export type WritableSchema<T> = ShortCircuited<
+type WritableSchema<T> = ShortCircuited<
   [
     ConstSchema<T>,
     EnumSchema<T>,
@@ -187,3 +187,38 @@ export type WritableSchema<T> = ShortCircuited<
 ```
 
 test case 全部通过啦！
+
+## 无法转化的特性
+
+注意 JSONSchema 在组合关键词上还有一个特性：共有的属性可以提取到关键词之外，就像下面这样：
+
+```JSON
+{
+  "oneOf": [
+    { "type": "number", "multipleOf": 5 },
+    { "type": "number", "multipleOf": 3 }
+  ]
+}
+```
+
+```JSON
+{
+   "type": "number",
+   "oneOf": [
+     { "multipleOf": 5 },
+     { "multipleOf": 3 }
+   ]
+ }
+```
+
+这个特性也是无法实现的。
+
+## 本文总结
+
+有了前面的经验，这个完全没难度。
+
+## 下一篇
+
+我们基本已经把常见的 JSONSchema 特性过了一遍了，还剩下什么呢？那就是 JSONSchema 神奇（头大）的引用（`$ref`）啦！这个究竟能不能做呢？我们将在下一篇来进行尝试。
+
+注：本文代码已上传至[GitHub 仓库](https://github.com/YuJianrong/jsonschema-ts-type)，欢迎 Fork 和提 PR，大家一起来做类型体操吧！

@@ -54,7 +54,7 @@ type TypedArraySchema<T> = T extends { type: 'array'; items: any }
 // 结合第一篇文章的 BasicSchema：
 type WritableSchema<T> = BasicSchema<T> | TypedArraySchema<T>;
 
-type Schema<T> = BasicSchema<DeepWriteable<T>>;
+export type Schema<T> = BasicSchema<DeepWriteable<T>>;
 ```
 
 简单又直接！😄
@@ -143,7 +143,7 @@ Expect<Equal<Schema<typeof typedTupleSchema>, [number, string, boolean]>>();
 提取 items 的类型那已经驾轻就熟了：
 
 ```TypeScript
-export type TupleSchema<T> = T extends { type: 'array'; items: any[] }
+type TupleSchema<T> = T extends { type: 'array'; items: any[] }
   ? T['items'] : never;
 ```
 
@@ -381,7 +381,7 @@ type AnyTypedAdditionalItemsTupleSchema<T> = T extends {
 
 // TupleSchema 也还是需要短路的，毕竟三种类型都有冲突，注意
 // AnyTypedAdditionalItemsTupleSchema 必须放最后
-export type TupleSchema<T> = ShortCircuited<
+type TupleSchema<T> = ShortCircuited<
   [
     NoAdditionalItemsTupleSchema<T>,
     TypedAdditionalItemsTupleSchema<T>,
