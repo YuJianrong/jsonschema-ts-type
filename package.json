@@ -1,6 +1,6 @@
 {
   "name": "jsonschema-ts-type",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript Type Helper to convert JSONSchema to TypeScript Type",
   "types": "src/index.ts",
   "scripts": {
