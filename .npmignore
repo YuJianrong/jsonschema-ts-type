@@ -7,3 +7,6 @@ zhihu
 .vscode
 .eslint*
 .husky
+.github
+commitlint.config.js
+release.config.js
